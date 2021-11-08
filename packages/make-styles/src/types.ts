@@ -2,19 +2,70 @@ import * as CSS from 'csstype';
 
 export type MakeStylesCSSValue = string | 0;
 
+type MakeStylesUnsupportedCSSProperties = {
+  // We don't support expansion of CSS shorthands
+  animation?: never;
+  background?: never;
+  border?: never;
+  borderBlock?: never;
+  borderBlockEnd?: never;
+  borderBlockStart?: never;
+  borderBottom?: never;
+  borderColor?: never;
+  borderImage?: never;
+  borderInline?: never;
+  borderInlineEnd?: never;
+  borderInlineStart?: never;
+  borderLeft?: never;
+  borderRadius?: never;
+  borderRight?: never;
+  borderStyle?: never;
+  borderTop?: never;
+  borderWidth?: never;
+  columnRule?: never;
+  flex?: never;
+  flexFlow?: never;
+  font?: never;
+  gap?: never;
+  grid?: never;
+  gridArea?: never;
+  gridColumn?: never;
+  gridGap?: never;
+  gridRow?: never;
+  gridTemplate?: never;
+  listStyle?: never;
+  margin?: never;
+  mask?: never;
+  maskBorder?: never;
+  offset?: never;
+  outline?: never;
+  overflow?: never;
+  padding?: never;
+  placeItems?: never;
+  placeSelf?: never;
+  textDecoration?: never;
+  textEmphasis?: never;
+  transition?: never;
+};
 type MakeStylesCSSProperties = Omit<
   CSS.Properties<MakeStylesCSSValue>,
   // We have custom definition for "animationName"
   'animationName'
->;
+> &
+  MakeStylesUnsupportedCSSProperties;
 
 export type MakeStylesStrictCSSObject = MakeStylesCSSProperties &
   MakeStylesCSSPseudos & { animationName?: MakeStylesAnimation | MakeStylesAnimation[] | CSS.AnimationProperty };
 
 type MakeStylesCSSObjectCustom = {
   [Property: string]: MakeStylesStyle | string | 0;
+} & MakeStylesStrictCSSObject;
+
+type MakeStylesCSSPseudos = {
+  [Property in CSS.Pseudos]?:
+    | (MakeStylesStrictCSSObject & { content?: string })
+    | (MakeStylesCSSObjectCustom & { content?: string });
 };
-type MakeStylesCSSPseudos = { [Property in CSS.Pseudos]?: MakeStylesStrictCSSObject & { content?: string } };
 
 export type MakeStylesAnimation = Record<'from' | 'to' | string, MakeStylesCSSObjectCustom>;
 export type MakeStylesStyle = MakeStylesStrictCSSObject | MakeStylesCSSObjectCustom;

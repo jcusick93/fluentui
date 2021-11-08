@@ -1,0 +1,7 @@
+{
+  "type": "prerelease",
+  "comment": "wip",
+  "packageName": "@fluentui/react-slider",
+  "email": "olfedias@microsoft.com",
+  "dependentChangeType": "patch"
+}
